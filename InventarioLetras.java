@@ -47,6 +47,19 @@ public class InventarioLetras {
             throw new IllegalArgumentException("No es una letra valida");
         }
     }
+
+    public int size() {
+        int total = this.cantidadDeApariciones;
+        return total;
+    }
+
+    public boolean isEmpty() {
+        if (this.cantidadDeApariciones == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 

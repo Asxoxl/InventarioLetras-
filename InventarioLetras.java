@@ -60,6 +60,20 @@ public class InventarioLetras {
             return false;
         }
     }
+
+    public String toString() {
+        String texto = "[";
+        for (int i = 0; i < 26; i++) {
+            char letraActual = (char) ('a' + i);
+            int cantidad = this.contadorDeCadaLetra[i];
+
+            for (int j = 0; j < cantidad; j++) {
+                texto = texto + letraActual;
+            }
+        }
+        texto = texto + "]";
+        return texto;
+    }
 }
 
 

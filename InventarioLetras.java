@@ -71,9 +71,31 @@ public class InventarioLetras {
                 texto = texto + letraActual;
             }
         }
+
         texto = texto + "]";
         return texto;
     }
+
+    public char encriptarCesar(char letra) {
+        char minuscula = Character.toLowerCase(letra);
+        int posicion = minuscula - 'a';
+        int nuevaPosicion = posicion + 3;
+        if (nuevaPosicion > 25) {
+            nuevaPosicion = nuevaPosicion - 26;
+        }
+        return (char) ('a' + nuevaPosicion);
+    }
+
+    public char desencriptarCesar(char letra) {
+        char minuscula = Character.toLowerCase(letra);
+        int posicion = minuscula - 'a';
+        int nuevaPosicion = posicion - 3;
+        if (nuevaPosicion < 0) {
+            nuevaPosicion = nuevaPosicion + 26;
+        }
+        return (char) ('a' + nuevaPosicion);
+    }
+
 }
 
 

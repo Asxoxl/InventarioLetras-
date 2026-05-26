@@ -77,25 +77,42 @@ public class InventarioLetras {
     }
 
     public char encriptarCesar(char letra) {
-        char minuscula = Character.toLowerCase(letra);
-        int posicion = minuscula - 'a';
-        int nuevaPosicion = posicion + 3;
-        if (nuevaPosicion > 25) {
-            nuevaPosicion = nuevaPosicion - 26;
-        }
-        return (char) ('a' + nuevaPosicion);
+        return transformar(letra, 3);
     }
 
     public char desencriptarCesar(char letra) {
-        char minuscula = Character.toLowerCase(letra);
-        int posicion = minuscula - 'a';
-        int nuevaPosicion = posicion - 3;
-        if (nuevaPosicion < 0) {
-            nuevaPosicion = nuevaPosicion + 26;
-        }
-        return (char) ('a' + nuevaPosicion);
+        return transformar(letra, -3);
     }
 
+    public String encriptarPalabra(String palabra, int desplazamiento) {
+        String resultado = "";
+        String palabraMinuscula = palabra.toLowerCase();
+        for (int i = 0; i < palabraMinuscula.length(); i++) {
+            char letraActual = palabraMinuscula.charAt(i);
+            resultado = resultado + transformar(letraActual, desplazamiento);
+        }
+        return resultado;
+    }
+
+    private char transformar(char letra, int desplazamiento) {
+        char minuscula = Character.toLowerCase(letra);
+        if (minuscula >= 'a' && minuscula <= 'z') {
+            int posicion = minuscula - 'a';
+            int nuevaPosicion = (posicion + (desplazamiento % 26) + 26) % 26;
+            return (char) ('a' + nuevaPosicion);
+        }
+        return letra;
+    }
+
+    public String desencriptarPalabra(String palabra, int desplazamiento) {
+        String resultado = "";
+        String palabraMinuscula = palabra.toLowerCase();
+        for (int i = 0; i < palabraMinuscula.length(); i++) {
+            char letraActual = palabraMinuscula.charAt(i);
+            resultado = resultado + transformar (letraActual, - desplazamiento);}
+        return resultado;
+    }
+    
 }
 
 

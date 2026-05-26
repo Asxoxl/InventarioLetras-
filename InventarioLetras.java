@@ -2,14 +2,14 @@ public class InventarioLetras {
     private int[] contadorDeCadaLetra;
     private int cantidadDeApariciones;
 
-    public InventarioLetras(String letrasRecibidas) {
+    public InventarioLetras(String letrasRecibidas) {// Crea el inventario y cuenta solo las letras válidas
         this.contadorDeCadaLetra = new int[26];
         this.cantidadDeApariciones = 0;
         String analisisTexto = "";
         for (int i = 0; i < letrasRecibidas.length(); i++) {
             char caracter =
                     letrasRecibidas.charAt(i);
-            if ((caracter >= 'a' && caracter <= 'z') || (caracter >= 'A' && caracter <= 'Z')) {
+            if (esLetraValida(caracter)) {
                 analisisTexto = analisisTexto + caracter;
             }
         }
@@ -22,38 +22,37 @@ public class InventarioLetras {
         }
     }
 
-    public int get(char letra) {
-        if (!((letra >= 'a' && letra <= 'z') || (letra >= 'A' && letra <= 'Z'))) {
-            throw new IllegalArgumentException();
+    public int get(char letra) {// Retorna la cantidad de veces que aparece una letra
+        if (!esLetraValida(letra)) {
+            throw new IllegalArgumentException("La letra no pertenece al alfabeto ingles o es una ñ");
         }
         char letraMinuscula = Character.toLowerCase(letra);
         int posicion = letraMinuscula - 'a';
         return this.contadorDeCadaLetra[posicion];
     }
 
-    public void set(char letra, int valor) {
+    public void set(char letra, int valor) {// Cambia la cuenta de una letra y actualiza el total
         if (valor < 0) {
             throw new IllegalArgumentException("El valor es negativo");
         }
         char letraMinuscula = Character.toLowerCase(letra);
-        if (letraMinuscula >= 'a' && letraMinuscula <= 'z') {
-            int posicion = letraMinuscula - (int) 'a';
+        if (esLetraValida(letraMinuscula)) {
+            int posicion = letraMinuscula - 'a';
 
             int cantidadInicial = this.contadorDeCadaLetra[posicion];
-            this.cantidadDeApariciones = this.cantidadDeApariciones - cantidadInicial;
+            this.cantidadDeApariciones = this.cantidadDeApariciones - cantidadInicial + valor;
             this.contadorDeCadaLetra[posicion] = valor;
-            this.cantidadDeApariciones = this.cantidadDeApariciones + valor;
         } else {
             throw new IllegalArgumentException("No es una letra valida");
         }
     }
 
-    public int size() {
+    public int size() {// Retorna la suma total de todas las letras
         int total = this.cantidadDeApariciones;
         return total;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty() {// Indica si el inventario está en cero
         if (this.cantidadDeApariciones == 0) {
             return true;
         } else {
@@ -61,7 +60,7 @@ public class InventarioLetras {
         }
     }
 
-    public String toString() {
+    public String toString() {// Muestra el inventario en formato [aaabbc]
         String texto = "[";
         for (int i = 0; i < 26; i++) {
             char letraActual = (char) ('a' + i);
@@ -76,11 +75,11 @@ public class InventarioLetras {
         return texto;
     }
 
-    public char encriptarCesar(char letra) {
+    public char encriptarCesar(char letra) {// Cifra una letra moviéndola 3 posiciones
         return transformar(letra, 3);
     }
 
-    public char desencriptarCesar(char letra) {
+    public char desencriptarCesar(char letra) {// Descifra una letra retrocediendo 3 posiciones
         return transformar(letra, -3);
     }
 
@@ -94,7 +93,7 @@ public class InventarioLetras {
         return resultado;
     }
 
-    private char transformar(char letra, int desplazamiento) {
+    private char transformar(char letra, int desplazamiento) {// Método auxiliar que ayuda a que el abecedario vuelva a empezar
         char minuscula = Character.toLowerCase(letra);
         if (minuscula >= 'a' && minuscula <= 'z') {
             int posicion = minuscula - 'a';
@@ -109,10 +108,48 @@ public class InventarioLetras {
         String palabraMinuscula = palabra.toLowerCase();
         for (int i = 0; i < palabraMinuscula.length(); i++) {
             char letraActual = palabraMinuscula.charAt(i);
-            resultado = resultado + transformar (letraActual, - desplazamiento);}
+            resultado = resultado + transformar(letraActual, -desplazamiento);
+        }
         return resultado;
     }
-    
+
+    public InventarioLetras add(InventarioLetras otro) {// Suma este inventario con otro y genera uno nuevo
+        InventarioLetras nuevo = new InventarioLetras("");
+        for (int i = 0; i < 26; i++) {
+            char letraActual = (char) ('a' + i);
+            int suma = this.get(letraActual) + otro.get(letraActual);
+            nuevo.set(letraActual, suma);
+        }
+        return nuevo;
+    }
+
+    public InventarioLetras amplifies(int n) {// Multiplica las cantidades del inventario por n
+        InventarioLetras nuevo = new InventarioLetras("");
+        for (int i = 0; i < 26; i++) {
+            char letraActual = (char) ('a' + i);
+            int total = this.get(letraActual) * n;
+            nuevo.set(letraActual, total);
+        }
+        return nuevo;
+    }
+
+    public InventarioLetras subtract(InventarioLetras otro) {// Resta otro inventario; retorna null si hay resultados negativos
+        InventarioLetras nuevo = new InventarioLetras("");
+        for (int i = 0; i < 26; i++) {
+            char letraActual = (char) ('a' + i);
+            int resta = this.get(letraActual) - otro.get(letraActual);
+            if (resta < 0) {
+                return null;
+            }
+            nuevo.set(letraActual, resta);
+        }
+        return nuevo;
+    }
+
+    private boolean esLetraValida(char c) {// Método auxiliar  Valida que el carácter sea del alfabeto inglés (sin ñ)
+        char minuscula = Character.toLowerCase(c);
+        return minuscula >= 'a' && minuscula <= 'z';
+    }
 }
 
 
